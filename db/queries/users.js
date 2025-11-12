@@ -17,3 +17,24 @@ export async function createUser(username, password) {
     throw error;
   }
 }
+
+export async function getUserByUsernamePassword(username, password) {
+  try {
+    const sql = `
+      SELECT * FROM users
+      WHERE username = $1
+    `;
+    const values = [username];
+    const { rows: [user] } = await db.query(sql, values);
+
+    if(!user) return null;
+
+    const authenticated = await bcrypt.compare(password, user.password);
+    if(!authenticated) return null;
+
+    return user;
+  } catch (error) {
+    console.error("Error with getUserByUsernamePassword: ", error);
+    throw error;
+  }
+}
