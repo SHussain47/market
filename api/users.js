@@ -20,7 +20,5 @@ router.post("/login", requireBody(["username", "password"]), async (req, res) =>
   if (!user) return res.status(401).send("Invalid Username OR Password");
 
   const token = createToken({ id: user.id });
-  // ***************************************** //
-  console.log("Saved Token [queries/users.js]: ", token);
   res.send(token);
 });
