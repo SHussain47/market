@@ -42,8 +42,6 @@ describe("users", () => {
       } = await db.query(
         "SELECT password FROM users WHERE username = 'tasktesttask'",
       );
-      // **************************** //
-      console.log("User.password [server.test.js]: ", user.password);
       expect(user.password).not.toBe("password");
     });
   });
@@ -56,11 +54,7 @@ describe("users", () => {
       });
       expect(response.status).toBe(200);
       expect(response.text).toMatch(/\w+\.\w+\.\w+/);
-      // *********************************//
-      console.log("Response.text [server.test.js]: ", response.text);
       token = response.text;
-      // *********************************//
-      console.log("Token [server/test.js]: ", token);
     });
 
     it("sends 401 if incorrect credentials are provided", async () => {
@@ -134,10 +128,6 @@ describe("orders", () => {
       );
       newOrderId = order.id;
 
-      // ************************** //
-      console.log("✅ order created with id:", newOrderId);
-      // ************************** //
-      
       const {
         rows: [forbiddenOrder],
       } = await db.query("SELECT * FROM orders WHERE id != $1", [newOrderId]);
@@ -234,11 +224,6 @@ describe("orders", () => {
     });
 
     it("adds the specified quantity of the product to the order", async () => {
-      // *********************** //
-      if (!newOrderId) {
-        throw new Error("newOrderId is undefined – cannot add product");
-      }
-      // *********************** //
       const response = await request(app)
         .post("/orders/" + newOrderId + "/products")
         .send(orderedProduct)
@@ -287,9 +272,6 @@ describe("orders", () => {
 
   describe("GET /products/:id/orders", () => {
     it("sends 404 if the product does not exist (even if user is logged in)", async () => {
-      // ******************************* //
-      console.log("Token used [server.test.js] :", token);
-      // ******************************* //
       const response = await request(app)
         .get("/products/" + (lastProduct.id + 1) + "/orders")
         .set("Authorization", `Bearer ${token}`);

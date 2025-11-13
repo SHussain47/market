@@ -1,6 +1,6 @@
 import db from "#db/client";
 
-export async function createOrder(date, note, user_Id) {
+export async function createOrder(date, user_Id, note = null) {
   try {
     const sql = `
       INSERT INTO orders (date, note, user_Id)
@@ -17,6 +17,21 @@ export async function createOrder(date, note, user_Id) {
 }
 
 //
+
+export async function getOrdersByUsersId(id) {
+  try {
+    const sql = `
+      SELECT * FROM orders
+      WHERE user_id = $1
+    `;
+    const values = [id];
+    const { rows: orders } = await db.query(sql, values);
+    return orders;
+  } catch (error) {
+    console.error("Error with getOrderByUsersId query: ", error);
+    throw error;
+  }
+}
 
 export async function getOrdersByProductId(id) {
   try {

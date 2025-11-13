@@ -23,8 +23,6 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/:id/orders", requireUser, async (req, res) => {
-  console.log("🔍 req.user.id in /products/:id/orders => [queries/products.js]", req.user.id);
   const orders = await getOrdersByProductId(req.product.id);
-  console.log("🔍 orders returned => [queries/products.js]", orders);
   res.send(orders);
 });

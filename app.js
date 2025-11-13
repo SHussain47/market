@@ -6,6 +6,7 @@ import morgan from "morgan";
 import getUserFromToken from "#middleware/getUserFromToken";
 import usersRouter from "#api/users";
 import productsRouter from "#api/products";
+import ordersRouter from "#api/orders";
 
 // JSON Parser
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(getUserFromToken);
 // Paths
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
+app.use("/orders", ordersRouter);
 
 // Error handler
 app.use((error, req, res, next) => {
