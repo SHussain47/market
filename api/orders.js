@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-import { createOrder, getOrdersByUsersId } from "#db/queries/orders";
+import { createOrder, getOrdersByUsersId, getOrderById } from "#db/queries/orders";
 import requireUser from "#middleware/requireUser";
 import requireBody from "#middleware/requireBody";
 
@@ -18,3 +18,18 @@ router.get("/", async (req, res) => {
   const orders = await getOrdersByUsersId(req.user.id);
   res.send(orders);
 });
+
+router.param("id", async (req, res, next, id) => {
+  const order = await getOrderById(id);
+
+  if (!order) return res.status(404).send("Order not found");
+
+  if (order.user_id !== req.user.id) return res.status(403).send("You are not authorised");
+
+  req.order = order;
+  next();
+});
+
+router.get("/:id", async (req, res) => {
+  res.send(req.order);
+})

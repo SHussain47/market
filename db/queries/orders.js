@@ -16,7 +16,20 @@ export async function createOrder(date, user_Id, note = null) {
   }
 }
 
-//
+export async function getOrderById(id) {
+  try {
+    const sql = `
+      SELECT * FROM orders
+      WHERE id = $1
+    `;
+    const values = [id];
+    const { rows: [order] } = await db.query(sql, values);
+    return order;
+  } catch (error) {
+    console.error("Error with getOrderById query: ", error);
+    throw error;
+  }
+}
 
 export async function getOrdersByUsersId(id) {
   try {
