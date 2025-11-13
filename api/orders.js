@@ -3,8 +3,10 @@ const router = express.Router();
 export default router;
 
 import { createOrder, getOrdersByUsersId, getOrderById } from "#db/queries/orders";
+import { createOrderProduct } from "#db/queries/orders_products";
 import requireUser from "#middleware/requireUser";
 import requireBody from "#middleware/requireBody";
+import { getProductsByOrderId } from "#db/queries/products";
 
 router.use(requireUser);
 
@@ -32,4 +34,15 @@ router.param("id", async (req, res, next, id) => {
 
 router.get("/:id", async (req, res) => {
   res.send(req.order);
+});
+
+router.post("/:id/products", requireBody(["productId", "quantity"]), async (req, res) => {
+  const { productId, quantity } = req.body;
+  const orderProduct = await createOrderProduct(req.order.id, productId, quantity);
+  res.status(201).send(orderProduct);
+})
+
+router.get("/:id/products", async (req, res) => {
+  const products = await getProductsByOrderId(req.order.id);
+  res.send(products);
 })

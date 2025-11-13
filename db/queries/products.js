@@ -43,3 +43,20 @@ export async function getProductById(id) {
     throw error;
   }
 }
+
+export async function getProductsByOrderId(id) {
+  try {
+    const sql = `
+      SELECT products.* FROM products
+      JOIN orders_products
+        ON products.id = orders_products.product_id
+        WHERE orders_products.order_id = $1 
+    `;
+    const values = [id];
+    const { rows: products } = await db.query(sql, values);
+    return products;
+  } catch (error) {
+    console.error("Error with getProductsByOrderId query: ", error);
+    throw error;
+  }
+}
