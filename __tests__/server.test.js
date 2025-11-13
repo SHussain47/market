@@ -272,6 +272,9 @@ describe("orders", () => {
 
   describe("GET /products/:id/orders", () => {
     it("sends 404 if the product does not exist (even if user is logged in)", async () => {
+      // ******************************* //
+      console.log("Token used:", token);
+      // ******************************* //
       const response = await request(app)
         .get("/products/" + (lastProduct.id + 1) + "/orders")
         .set("Authorization", `Bearer ${token}`);

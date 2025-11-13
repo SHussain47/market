@@ -38,3 +38,18 @@ export async function getUserByUsernamePassword(username, password) {
     throw error;
   }
 }
+
+export async function getUserById(id) {
+  try {
+    const sql = `
+      SELECT * FROM users
+      WHERE id = $1
+    `;
+    const values = [id];
+    const { rows: [user] } = await db.query(sql, values);
+    return user; 
+  } catch (error) {
+    console.error("Error with getUserById: ", error);
+    throw error;
+  }
+}
