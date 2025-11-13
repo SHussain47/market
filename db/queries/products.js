@@ -15,3 +15,31 @@ export async function createProduct(title, description, price) {
     throw error;
   }
 }
+
+export async function getProducts() {
+  try {
+    const sql = `
+      SELECT * FROM products
+    `;
+    const { rows: products } = await db.query(sql);
+    return products;
+  } catch (error) {
+    console.error("Error with getProducts query: ", error);
+    throw error;
+  }
+}
+
+export async function getProductById(id) {
+  try {
+    const sql = `
+      SELECT * FROM products
+      WHERE id = $1
+    `;
+    const values = [id];
+    const { rows: [product] } = await db.query(sql, values);
+    return product;
+  } catch (error) {
+    console.error("Error with getProductById query: ", error);
+    throw error;
+  }
+}
